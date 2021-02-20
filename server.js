@@ -1,4 +1,4 @@
-const grpc = require('grpc');
+const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
 const packageDef = protoLoader.loadSync('todo.proto', {});
@@ -6,15 +6,46 @@ const grpcObject = grpc.loadPackageDefinition(packageDef);
 const todoPackage = grpcObject.todoPackage;
 
 const server = new grpc.Server();
-server.bind('0.0.0.0:4000', grpc.ServerCredentials.createInsecure());
 
 server.addService(todoPackage.Todo.service, {
   createTodo,
   readTodos,
+  readTodosStream,
 });
 
-function createTodo(call, callback) {}
+const todoList = [];
 
-function readTodos(call, callback) {}
+function createTodo(call, callback) {
+  const todoItem = {
+    id: todoList.length + 1,
+    text: call.request.text,
+  };
 
-server.start();
+  todoList.push(todoItem);
+  callback(null, todoItem);
+}
+
+function readTodos(call, callback) {
+  callback(null, {
+    items: todoList,
+  });
+}
+
+function readTodosStream(call) {
+  for (let i = 0; i < 100; i++) {
+    todoList.push({ id: todoList.length + 1, text: `To do something ${i}` });
+  }
+
+  todoList.forEach((todoItem) => call.write(todoItem));
+  call.end();
+}
+
+server.bindAsync(
+  '0.0.0.0:50051',
+  grpc.credentials.createInsecure(),
+  (err, port) => {
+    if (err) console.log('Error has occurred ', err);
+    console.log(`Server is listening ${port} port`);
+    server.start();
+  },
+);

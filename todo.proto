@@ -12,9 +12,10 @@ message TodoItems {
   repeated TodoItem items = 1;
 }
 
-message void {};
+message voidData {};
 
 service Todo {
   rpc createTodo(TodoItem) returns (TodoItem);
-  rpc readTodos(void) returns (TodoItems);
+  rpc readTodos(voidData) returns (TodoItems);
+  rpc readTodosStream(voidData) returns (stream TodoItem);
 }
