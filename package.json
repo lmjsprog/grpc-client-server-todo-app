@@ -1,16 +1,39 @@
 {
-  "name": "googlerpc",
+  "name": "grpc-todo-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Simple todo app based on grpc client and server",
+  "main": "server.js",
+  "private": "true",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:server": "node src/server.js",
+    "start:client": "node src/client.js",
+    "lint": "eslint ./src"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "grpc",
+    "nodejs",
+    "protobuf"
+  ],
+  "author": "lmjsprog <lmjsprog@gmail.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmjsprog/grpc-client-server-todo-app"
+  },
+  "bugs": {
+    "url": "https://github.com/lmjsprog/grpc-client-server-todo-app/issues"
+  },
+  "homepage": "https://github.com/lmjsprog/grpc-client-server-todo-app",
   "dependencies": {
     "@grpc/grpc-js": "^1.2.8",
     "@grpc/proto-loader": "^0.5.6"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.45",
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "prettier": "^2.2.1"
   }
 }

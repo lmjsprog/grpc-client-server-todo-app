@@ -1,9 +1,10 @@
+const { resolve } = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
-const packageDef = protoLoader.loadSync('todo.proto', {});
+const packageDef = protoLoader.loadSync(resolve(__dirname, 'todo.proto'), {});
 const grpcObject = grpc.loadPackageDefinition(packageDef);
-const todoPackage = grpcObject.todoPackage;
+const { todoPackage } = grpcObject;
 
 const server = new grpc.Server();
 
@@ -36,7 +37,7 @@ function readTodosStream(call) {
     todoList.push({ id: todoList.length + 1, text: `To do something ${i}` });
   }
 
-  todoList.forEach((todoItem) => call.write(todoItem));
+  todoList.forEach(todoItem => call.write(todoItem));
   call.end();
 }
 

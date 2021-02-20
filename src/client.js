@@ -1,9 +1,10 @@
+const { resolve } = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
-const packageDef = protoLoader.loadSync('todo.proto', {});
+const packageDef = protoLoader.loadSync(resolve(__dirname, 'todo.proto'), {});
 const grpcObject = grpc.loadPackageDefinition(packageDef);
-const todoPackage = grpcObject.todoPackage;
+const { todoPackage } = grpcObject;
 
 const client = new todoPackage.Todo(
   'localhost:50051',
@@ -34,7 +35,7 @@ client.readTodos({}, (err, response) => {
 
 const callObject = client.readTodosStream();
 
-callObject.on('data', (message) => {
+callObject.on('data', message => {
   console.log('Message from server is ', JSON.stringify(message));
 });
 callObject.on('end', () => {
